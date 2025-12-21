@@ -37,7 +37,6 @@ if ($httpCode !== 200) {
     if ($response) {
         echo $response;
     } else {
-        http_response_code(500);
         echo json_encode(['error' => 'Failed to connect to target API']);
     }
     exit();
