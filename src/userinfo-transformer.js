@@ -16,6 +16,35 @@ function isWhitelisted(username, whitelist) {
 }
 
 /**
+ * 递归转换 JSON 数据中的所有字符串值为小写。
+ *
+ * 适用于 userinfo 响应中 Matrix 可能读取不同 claim 字段的场景。
+ *
+ * @param {unknown} value 需要转换的 JSON 字段值。
+ * @returns {unknown} 字符串会返回小写值，数组和对象会递归处理，其他类型保持原样。
+ */
+function lowercaseStringValues(value) {
+  if (typeof value === "string") {
+    return value.toLowerCase();
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => lowercaseStringValues(item));
+  }
+
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [
+        key,
+        lowercaseStringValues(item)
+      ])
+    );
+  }
+
+  return value;
+}
+
+/**
  * 对上游用户信息执行兼容层改写。
  *
  * @param {Record<string, unknown>} payload 上游 userinfo JSON 对象。
@@ -23,11 +52,9 @@ function isWhitelisted(username, whitelist) {
  * @returns {Response} 处理完成后的响应对象。
  */
 export function transformUserInfo(payload, config) {
-  const normalizedPayload = { ...payload };
-
-  if (config.forceStrtolower && typeof normalizedPayload.username === "string") {
-    normalizedPayload.username = normalizedPayload.username.toLowerCase();
-  }
+  const normalizedPayload = config.forceStrtolower
+    ? lowercaseStringValues(payload)
+    : { ...payload };
 
   const trustLevel = normalizedPayload.trust_level;
   if (

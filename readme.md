@@ -6,7 +6,7 @@
 
 ## 当前支持的能力
 
-1. 将 `username` 转为小写。
+1. 将 userinfo 返回 JSON 中的所有字符串值转为小写。
 2. 限制最低 `trust_level`。
 3. 通过白名单绕过最低信任等级限制。
 4. 通过 Workers 环境变量控制行为，不再依赖 PHP 文件内硬编码。
@@ -18,7 +18,7 @@
 | 变量名 | 说明 | 默认值 |
 | --- | --- | --- |
 | `TARGET_URL` | 上游 userinfo 接口地址 | `https://connect.linux.do/api/user` |
-| `FORCE_STRTOLOWER` | 是否强制把 `username` 转小写，支持 `true/false/1/0/yes/no/on/off` | `false` |
+| `FORCE_STRTOLOWER` | 是否强制把 userinfo 返回 JSON 中的所有字符串值转小写，支持 `true/false/1/0/yes/no/on/off` | `false` |
 | `FORCE_MINLEVEL` | 最低信任等级，必须是数字 | 未设置 |
 | `WHITELIST_MINLEVEL_USERNAME` | 信任等级白名单，支持 `["user1","user2"]` 或 `user1,user2` | 空 |
 
